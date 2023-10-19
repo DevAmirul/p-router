@@ -12,6 +12,9 @@
     ],
     "license": "MIT",
     "autoload": {
+        "files": [
+            "src/Helper/Helpers.php"
+        ],
         "psr-4": {
             "Devamirul\\PRouter\\": "src/"
         }

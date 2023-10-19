@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * Define root directory.
+ */
+define('APP_ROOT', dirname(__DIR__));
 
-// Require composer autoloader
+/**
+ * Require composer autoloader.
+ */
 require __DIR__ . '/vendor/autoload.php';
 
-$router = new Devamirul\PRouter\Router();
+$router = Devamirul\PRouter\Router::singleton();
 
+$router->get('/', function(){
+    echo 'home';
+});
 
 
 
