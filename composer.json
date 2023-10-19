@@ -1,0 +1,30 @@
+{
+    "name": "devamirul/p-router",
+    "description": "Simple, lightweight PHP router that is easy to get integrated any raw PHP project. Heavily inspired by the Laravel router.",
+    "type": "package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Devamirul\\PRouter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Amirul islam",
+            "email": "dev.amirul@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.00",
+        "ext-json": "*"
+    },
+    "keywords": [
+        "router",
+        "php",
+        "url-handling",
+        "input-handler",
+        "routing-engine",
+        "request-handler"
+    ]
+}
