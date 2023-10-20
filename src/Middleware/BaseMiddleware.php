@@ -2,6 +2,7 @@
 
 namespace Devamirul\PRouter\Middleware;
 
+use App\Middleware\AuthMiddleware;
 use Devamirul\PRouter\Request\Request;
 
 class BaseMiddleware {
@@ -9,32 +10,23 @@ class BaseMiddleware {
     /**
      * Resolve middleware.
      */
-    public static function resolve($middlewareNames, Request $request) {
-        $arguments = [];
-
+    public static function resolve($middlewareNames, Request $request): void {
         if (empty($middlewareNames)) {
             return;
         }
 
+        $configMiddlewares = config('middleware', 'middleware') ?? null;
+
+        if (empty($configMiddlewares)) {
+            throw new \Exception('Middleware config is empty', 404);
+        }
+
         foreach ($middlewareNames as $middleware) {
-            if (strpos($middleware, ":")) {
-
-                $explodeMiddleware = explode(':', $middleware);
-
-                $name = $explodeMiddleware[0];
-
-                $arguments = explode(',', $explodeMiddleware[1]);
-            } else {
-                $name = $middleware;
+            if (!isset($configMiddlewares[$middleware])) {
+                throw new \Exception('No matching middleware found for key' . $middleware);
             }
 
-            $middleware = config('middleware', 'middleware')[$name] ?? null;
-
-            if (!$middleware) {
-                throw new \Exception('No matching middleware found for key' . $name);
-            }
-
-            (new $middleware())->handle($request, $arguments);
+            (new AuthMiddleware())->handle($request);
         }
     }
 
