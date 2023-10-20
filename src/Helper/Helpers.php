@@ -9,7 +9,7 @@ if (!function_exists('config')) {
      * Get config data.
      */
     function config(string $file, string $key): string | array {
-        $data = require APP_ROOT .  "/config/{$file}.php";
+        $data = require APP_ROOT . "/app/config/{$file}.php";
         if (isset($data[$key])) {
             return $data[$key];
         } else {

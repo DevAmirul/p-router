@@ -16,7 +16,8 @@
             "src/Helper/Helpers.php"
         ],
         "psr-4": {
-            "Devamirul\\PRouter\\": "src/"
+            "Devamirul\\PRouter\\": "src/",
+            "App\\": "app/"
         }
     },
     "authors": [
@@ -33,6 +34,8 @@
     "scripts": {
         "start": [
             "php -S 127.0.0.1:8000"
-        ]
+        ],
+        "middleware": "cd src/CLI && php createMiddleware.php && cd -",
+        "app": "cd src/CLI && php createApp.php && cd -"
     }
 }
