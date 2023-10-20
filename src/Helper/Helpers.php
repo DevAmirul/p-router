@@ -2,19 +2,18 @@
 
 use Devamirul\PRouter\Request\Request;
 use Devamirul\PRouter\Router;
-use Exception;
+// use Exception;
 
 if (!function_exists('config')) {
     /**
      * Get config data.
      */
     function config(string $file, string $key): string | array {
-        $data = require APP_ROOT . "/config/{$file}.php";
-
+        $data = require APP_ROOT .  "/config/{$file}.php";
         if (isset($data[$key])) {
             return $data[$key];
         } else {
-            throw new Exception("Key: ($key) Not Found");
+            throw new Exception("Key: ($key) not found in config");
         }
     }
 }

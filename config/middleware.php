@@ -1,14 +1,14 @@
 <?php
 
+use Devamirul\PRouter\Middleware\Middlewares\CsrfMiddleware;
+
 return [
 
     /**
      * Autoloaded All Middleware.
      */
     'middleware' => [
-        'auth'  => App\Http\Middleware\AuthMiddleware::class,
-        'guest' => App\Http\Middleware\GuestMiddleware::class,
-        'csrf'  => Devamirul\PhpMicro\core\Foundation\Middleware\Middlewares\CsrfMiddleware::class,
+        'csrf'  => Devamirul\PRouter\Middleware\Middlewares\CsrfMiddleware::class,
     ],
 
     /**

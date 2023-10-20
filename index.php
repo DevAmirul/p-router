@@ -3,7 +3,7 @@
 /**
  * Define root directory.
  */
-define('APP_ROOT', dirname(__DIR__));
+define('APP_ROOT', dirname(__FILE__));
 
 /**
  * Require composer autoloader.
@@ -12,13 +12,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 $router = Devamirul\PRouter\Router::singleton();
 
-$router->get('/', function(){
-    echo 'home';
-});
-
-
-
-
-
+require_once './route.php';
 
 $router->resolve();
