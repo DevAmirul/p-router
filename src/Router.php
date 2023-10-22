@@ -16,6 +16,16 @@ class Router {
     private string $method;
 
     /**
+     * Set previous called method name.
+     */
+    private ?string $prevMethod = null;
+
+    /**
+     * Set previous called method name.
+     */
+    private array $matchMethods;
+
+    /**
      * Store all routes.
      */
     private array $routes = [];
@@ -49,58 +59,113 @@ class Router {
             'middleware' => config('middleware', $this->method) ? config('middleware', $this->method) : null,
             'where'      => null,
         ];
-
         return $this;
     }
 
     /**
      * Store "GET" method router in $this->routers property.
      */
-    public function get(string $path, $callback): static {
+    public function get(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
         return $this->addRoute('get', $path, $callback);
     }
 
     /**
      * Store "POST" method router in $this->routers property.
      */
-    public function post(string $path, $callback): static {
+    public function post(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
         return $this->addRoute('post', $path, $callback);
     }
 
     /**
      * Store "PUT" method router in $this->routers property.
      */
-    public function put(string $path, $callback): static {
+    public function put(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
         return $this->addRoute('put', $path, $callback);
     }
 
     /**
      * Store "PATCH" method router in $this->routers property.
      */
-    public function patch(string $path, $callback): static {
+    public function patch(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
         return $this->addRoute('patch', $path, $callback);
     }
 
     /**
      * Store "DELETE" method router in $this->routers property.
      */
-    public function delete(string $path, $callback): static {
+    public function delete(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
         return $this->addRoute('delete', $path, $callback);
+    }
+
+    /**
+     * Sometimes you may need to register a route that responds to multiple HTTP verbs.
+     * You may do so using the match method.
+     */
+    public function match(array $methods, string $path, array | callable $callback): static {
+        $this->prevMethod   = __FUNCTION__;
+        $this->matchMethods = $methods;
+
+        foreach ($methods as $method) {
+            $this->addRoute($method, $path, $callback);
+        }
+        return $this;
+    }
+
+    /**
+     * Sometimes you may need to register a route that responds to multiple HTTP verbs.
+     * You may do so using the match method.
+     */
+    public function any(string $path, array | callable $callback): static {
+        $this->prevMethod = __FUNCTION__;
+
+        $allMethods = ['get', 'post', 'delete', 'put', 'patch'];
+
+        foreach ($allMethods as $method) {
+            $this->addRoute($method, $path, $callback);
+        }
+        return $this;
     }
 
     /**
      * Set router name.
      */
     public function name(string $name): static {
-        if (!empty($this->routeNames[$this->method])) {
-            if (isset($this->routeNames[$this->method][$name])) {
-                throw new Exception('Router name (' . $name . ') has been used more than once');
+        if ($this->prevMethod === 'any') {
+            $allMethods = ['get', 'post', 'delete', 'put', 'patch'];
+
+            foreach ($allMethods as $method) {
+                if (!empty($this->routeNames[$method])) {
+                    if (in_array($name, $this->routeNames[$method])) {
+                        throw new Exception('Router name (' . $name . ') has been used more than once');
+                    }
+                }
+                $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
+                $this->routeNames[$method][]                                           = $name;
             }
+        } elseif ($this->prevMethod === 'match') {
+            foreach ($this->matchMethods as $method) {
+                if (!empty($this->routeNames[$method])) {
+                    if (in_array($name, $this->routeNames[$method])) {
+                        throw new Exception('Router name (' . $name . ') has been used more than once');
+                    }
+                }
+                $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
+                $this->routeNames[$method][]                                           = $name;
+            }
+        } else {
+            if (!empty($this->routeNames[$this->method])) {
+                if (in_array($name, $this->routeNames[$this->method])) {
+                    throw new Exception('Router name (' . $name . ') has been used more than once');
+                }
+            }
+            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['name'] = $name;
+            $this->routeNames[$this->method][]                                                 = $name;
         }
-
-        $this->routes[$this->method][array_key_last($this->routes[$this->method])]['name'] = $name;
-        $this->routeNames[$this->method]                                                   = $name;
-
         return $this;
     }
 
@@ -108,8 +173,19 @@ class Router {
      * Set router middleware.
      */
     public function middleware(string | array $middlewareNames): static {
+        if ($this->prevMethod === 'any') {
+            $allMethods = ['get', 'post', 'delete', 'put', 'patch'];
 
-        $this->routes[$this->method][array_key_last($this->routes[$this->method])]['middleware'][] = $middlewareNames;
+            foreach ($allMethods as $method) {
+                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middlewareNames;
+            }
+        } elseif ($this->prevMethod === 'match') {
+            foreach ($this->matchMethods as $method) {
+                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middlewareNames;
+            }
+        } else {
+            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['middleware'][] = $middlewareNames;
+        }
         return $this;
     }
 
@@ -126,10 +202,20 @@ class Router {
     }
 
     /**
+     *
+     */
+    public function fallback(array | callable $callback): void {
+        $this->routes['fallback'] = [
+            'callback' => $callback,
+        ];
+    }
+
+    /**
      * This method is called from the run method, this method resolves all routers.
      * And it is decided which router will do which job.
      */
     public function resolve(): mixed {
+        dd($this->routes);
         $path = explode('/', ltrim($this->request->path(), '/'));
 
         if (isset($this->routes[$this->request->method()])) {
@@ -179,12 +265,28 @@ class Router {
                                     [$this->request]
                                 );
                             }
-
                         }
                     }
                 }
             }
-            throw new Exception();
+            if (isset($this->routes['fallback'])) {
+                $fallback = $this->routes['fallback'];
+
+                if (is_callable($fallback['callback'])) {
+                    return call_user_func($fallback['callback']);
+                } elseif (is_array($routes['callback'])) {
+                    if (is_string($fallback['callback'][0]) && is_string($fallback['callback'][1])) {
+                        $controllerInstance = new $fallback['callback'][0];
+
+                        return call_user_func_array(
+                            [$controllerInstance, $fallback['callback'][1]],
+                            [$this->request]
+                        );
+                    }
+                }
+            } else {
+                throw new Exception('The route does not match', 404);
+            }
         } else {
             throw new Exception('The route method does not match', 404);
         }

@@ -34,6 +34,21 @@ if (!function_exists('dd')) {
     }
 }
 
+if (!function_exists('dump')) {
+    /**
+     * View the data in details.
+     */
+    function dump(mixed $value): void {
+        if (is_string($value)) {
+            echo $value;
+        } else {
+            echo '<pre>';
+            print_r($value);
+            echo '</pre>';
+        }
+    }
+}
+
 if (!function_exists('request')) {
     /**
      * Get request instance.

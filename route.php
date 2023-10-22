@@ -1,10 +1,23 @@
 <?php
 
-$router->get('/', function () {
-    echo 'home';
-});
+// $router->get('/', function () {
+//     echo 'home';
+// })->name('home');
 
-$router->get('/user', function () {
+$router->match(['post', 'put', 'delete'], '/match', function () {
     echo 'user';
-});
-    // ->middleware('auth');
+})->name('matchName');
+
+$router->any('/anyPath', function () {
+    echo 'echo any';
+})->name('anyName');
+
+$router->get('/getPath', function () {
+    echo 'echo get';
+})->name('getName');
+
+// $router->fallback(function () {
+//     echo 'fallback';
+// });
+
+// ->middleware('auth');
