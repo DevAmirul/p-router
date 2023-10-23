@@ -4,15 +4,15 @@
 //     echo 'home';
 // })->name('home');
 
-$router->match(['post', 'put', 'delete'], '/match', function () {
-    echo 'user';
-})->name('matchName');
+// $router->match(['post', 'put', 'delete'], '/match', function () {
+//     echo 'user';
+// })->name('matchName');
 
-$router->any('/anyPath', function () {
-    echo 'echo any';
-})->name('anyName');
+// $router->any('/anyPath', function () {
+//     echo 'echo any';
+// })->name('anyName');
 
-$router->get('/getPath', function () {
+$router->get('/getpath/*', function () {
     echo 'echo get';
 })->name('getName');
 

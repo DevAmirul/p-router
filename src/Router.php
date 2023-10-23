@@ -21,9 +21,14 @@ class Router {
     private ?string $prevMethod = null;
 
     /**
-     * Set previous called method name.
+     * List of match methods.
      */
     private array $matchMethods;
+
+    /**
+     * List of all methods.
+     */
+    private array $allMethods;
 
     /**
      * Store all routes.
@@ -41,6 +46,8 @@ class Router {
     public Request $request;
 
     private function __construct() {
+        $this->allMethods = ['get', 'post', 'delete', 'put', 'patch'];
+
         $this->request = Request::singleton();
     }
 
@@ -136,35 +143,15 @@ class Router {
      */
     public function name(string $name): static {
         if ($this->prevMethod === 'any') {
-            $allMethods = ['get', 'post', 'delete', 'put', 'patch'];
-
-            foreach ($allMethods as $method) {
-                if (!empty($this->routeNames[$method])) {
-                    if (in_array($name, $this->routeNames[$method])) {
-                        throw new Exception('Router name (' . $name . ') has been used more than once');
-                    }
-                }
-                $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
-                $this->routeNames[$method][]                                           = $name;
+            foreach ($this->allMethods as $method) {
+                $this->helperFunctionOfName($name, $method);
             }
         } elseif ($this->prevMethod === 'match') {
             foreach ($this->matchMethods as $method) {
-                if (!empty($this->routeNames[$method])) {
-                    if (in_array($name, $this->routeNames[$method])) {
-                        throw new Exception('Router name (' . $name . ') has been used more than once');
-                    }
-                }
-                $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
-                $this->routeNames[$method][]                                           = $name;
+                $this->helperFunctionOfName($name, $method);
             }
         } else {
-            if (!empty($this->routeNames[$this->method])) {
-                if (in_array($name, $this->routeNames[$this->method])) {
-                    throw new Exception('Router name (' . $name . ') has been used more than once');
-                }
-            }
-            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['name'] = $name;
-            $this->routeNames[$this->method][]                                                 = $name;
+            $this->helperFunctionOfName($name, $this->method);
         }
         return $this;
     }
@@ -172,19 +159,17 @@ class Router {
     /**
      * Set router middleware.
      */
-    public function middleware(string | array $middlewareNames): static {
+    public function middleware(string | array $middleware): static {
         if ($this->prevMethod === 'any') {
-            $allMethods = ['get', 'post', 'delete', 'put', 'patch'];
-
-            foreach ($allMethods as $method) {
-                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middlewareNames;
+            foreach ($this->allMethods as $method) {
+                $this->helperFunctionOfMiddleware($middleware, $method);
             }
         } elseif ($this->prevMethod === 'match') {
             foreach ($this->matchMethods as $method) {
-                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middlewareNames;
+                $this->helperFunctionOfMiddleware($middleware, $method);
             }
         } else {
-            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['middleware'][] = $middlewareNames;
+            $this->helperFunctionOfMiddleware($middleware, $this->method);
         }
         return $this;
     }
@@ -193,10 +178,32 @@ class Router {
      * Set regular expression for dynamic params.
      */
     public function where(string | array $expression = null): static {
-        if (is_string($expression)) {
-            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['where'] = [$expression];
+        if ($this->prevMethod === 'any') {
+            if (is_string($expression)) {
+                foreach ($this->allMethods as $method) {
+                    $this->routes[$method][array_key_last($this->routes[$method])]['where'] = [$expression];
+                }
+            } else {
+                foreach ($this->allMethods as $method) {
+                    $this->routes[$method][array_key_last($this->routes[$method])]['where'] = $expression;
+                }
+            }
+        } elseif ($this->prevMethod === 'match') {
+            if (is_string($expression)) {
+                foreach ($this->matchMethods as $method) {
+                    $this->routes[$method][array_key_last($this->routes[$method])]['where'] = [$expression];
+                }
+            } else {
+                foreach ($this->matchMethods as $method) {
+                    $this->routes[$method][array_key_last($this->routes[$method])]['where'] = $expression;
+                }
+            }
         } else {
-            $this->routes[$this->method][array_key_last($this->routes[$this->method])]['where'] = $expression;
+            if (is_string($expression)) {
+                $this->routes[$this->method][array_key_last($this->routes[$this->method])]['where'] = [$expression];
+            } else {
+                $this->routes[$this->method][array_key_last($this->routes[$this->method])]['where'] = $expression;
+            }
         }
         return $this;
     }
@@ -215,7 +222,8 @@ class Router {
      * And it is decided which router will do which job.
      */
     public function resolve(): mixed {
-        dd($this->routes);
+        // dd($this->routes);
+
         $path = explode('/', ltrim($this->request->path(), '/'));
 
         if (isset($this->routes[$this->request->method()])) {
@@ -241,14 +249,23 @@ class Router {
                             $params[] = $path[$key];
                             $url .= '/' . $path[$key];
 
+                        } elseif ($route === '*') {
+                            // $u = '';
+                            // foreach (range($key, sizeof($path) - 1) as $pathKey) {
+                            //     $u .= $path[$pathKey];
+                            // }
+                            dd($route);
+
+                            // $url .= '/' . $path[$key];
                         } else {
                             break;
                         }
                     }
+                    // dd($path);
 
                     if (ltrim($this->request->path(), '/') === ltrim($url, '/')) {
                         if (!$url) {
-                            throw new Exception();
+                            throw new Exception('This route did not defined.', 404);
                         }
 
                         BaseMiddleware::resolve($routes['middleware'], $this->request);
@@ -285,10 +302,10 @@ class Router {
                     }
                 }
             } else {
-                throw new Exception('The route does not match', 404);
+                throw new Exception('This route did not defined.', 404);
             }
         } else {
-            throw new Exception('The route method does not match', 404);
+            throw new Exception('The route method does not match.', 404);
         }
     }
 
@@ -346,6 +363,26 @@ class Router {
             }
         }
         throw new Exception('Route name did not defined', 404);
+    }
+
+    /**
+     * Helper function of name.
+     */
+    public function helperFunctionOfName(string $name, string $method): void {
+        if (!empty($this->routeNames[$method])) {
+            if (in_array($name, $this->routeNames[$method])) {
+                throw new Exception('Router name (' . $name . ') has been used more than once');
+            }
+        }
+        $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
+        $this->routeNames[$method][]                                           = $name;
+    }
+
+    /**
+     * Helper function of middleware.
+     */
+    public function helperFunctionOfMiddleware(string | array $middleware, string $method): void {
+        $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middleware;
     }
 
 }
