@@ -232,14 +232,25 @@ class Router {
                 $params     = [];
                 $whereIndex = 0;
 
-                if (sizeof($routes['path']) === sizeof($path)) {
-
+                if (
+                    (sizeof($routes['path']) === sizeof($path)) ||
+                    in_array('*', $routes['path']) ||
+                    (
+                        str_contains(implode('/', $routes['path']), '?') &&
+                        str_ends_with(implode('/', $routes['path']), '?') &&
+                        sizeof($routes['path']) - 1 === sizeof($path)
+                    )
+                ) {
                     foreach ($routes['path'] as $key => $route) {
 
-                        if ($route === $path[$key]) {
+                        if (isset($path[$key]) && $route === $path[$key]) {
                             $url .= '/' . $path[$key];
                         } elseif (str_starts_with($route, ':')) {
 
+                            if (str_ends_with($route, '?') && !isset($path[$key])) {
+                                goto url;
+                            }
+                            
                             if ($routes['where']) {
                                 if (!preg_match('/' . $routes['where'][$whereIndex] . '/', $path[$key])) {
                                     throw new Exception('Route param expression does not match', 404);
@@ -250,20 +261,18 @@ class Router {
                             $url .= '/' . $path[$key];
 
                         } elseif ($route === '*') {
-                            // $u = '';
-                            // foreach (range($key, sizeof($path) - 1) as $pathKey) {
-                            //     $u .= $path[$pathKey];
-                            // }
-                            dd($route);
-
-                            // $url .= '/' . $path[$key];
+                            foreach (range($key, sizeof($path) - 1) as $pathKey) {
+                                $url .= '/' . $path[$pathKey];
+                            }
                         } else {
                             break;
                         }
                     }
-                    // dd($path);
+                    // dd(ltrim($this->request->path(), '/') === ltrim($url, '/'));
+                    url:
 
                     if (ltrim($this->request->path(), '/') === ltrim($url, '/')) {
+
                         if (!$url) {
                             throw new Exception('This route did not defined.', 404);
                         }

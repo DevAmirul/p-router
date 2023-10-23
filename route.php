@@ -8,11 +8,11 @@
 //     echo 'user';
 // })->name('matchName');
 
-// $router->any('/anyPath', function () {
+// $router->any('/anypath/*', function () {
 //     echo 'echo any';
 // })->name('anyName');
 
-$router->get('/getpath/*', function () {
+$router->get('/getpath/:id', function () {
     echo 'echo get';
 })->name('getName');
 
