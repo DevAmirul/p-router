@@ -14,4 +14,4 @@ $router = Devamirul\PRouter\Router::singleton();
 
 require_once './route.php';
 
-$router->resolve();
+$router->run();

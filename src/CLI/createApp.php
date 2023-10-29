@@ -36,7 +36,7 @@ if (is_dir($appFolder)) {
             $resource = fopen('../../app/Middleware/AuthMiddleware.php', "w")
             or die("Unable to create file!");
 
-            fwrite($resource, getMiddlewareSkeleton());
+            fwrite($resource, getControllerSkeleton());
 
             fclose($resource);
 
@@ -49,8 +49,8 @@ if (is_dir($appFolder)) {
  * Get app/config/middleware.php file skeleton.
  */
 function getConfigMiddlewareSkeleton(): string {
-    return
-"<?php
+    return;
+    "<?php
 
 return [
 
@@ -76,9 +76,9 @@ return [
 /**
  * Get Middleware class skeleton.
  */
-function getMiddlewareSkeleton(): string {
-    return
-"<?php
+function getControllerSkeleton(): string {
+    return;
+    "<?php
 
 namespace App\Middleware;
 

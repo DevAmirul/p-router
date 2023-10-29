@@ -6,7 +6,9 @@ use Devamirul\PRouter\Traits\Singleton;
 
 class Request {
     use Singleton;
-    
+
+    private array $params;
+
     private function __construct() {}
 
     /**
@@ -78,7 +80,7 @@ class Request {
      * Retrieve all requested data., you can also get single data from here.
      * If no data is found, the default data will be returned.
      */
-    public function input(string $key = '', mixed $default = null): mixed {
+    public function input(?string $key = null, mixed $default = null): mixed {
         if ($key) {
             if (isset($_REQUEST[$key])) {
                 return $_REQUEST[$key];
@@ -119,5 +121,26 @@ class Request {
             }
         }
         return $only;
+    }
+
+    /**
+     * Set param.
+     */
+    public function setParam($key, $value): void {
+        $this->params[$key] = $value;
+    }
+
+    // TODO: added to helper function.
+    /**
+     * Get param.
+     */
+    public function getParam(?string $key = null): string | array | null {
+        if (isset($this->params[$key])) {
+            return $this->params[$key];
+        } elseif (!empty($this->params)) {
+            return $this->params;
+        } else {
+            return null;
+        }
     }
 }

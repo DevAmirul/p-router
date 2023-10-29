@@ -24,14 +24,14 @@ if ($middleware) {
      * Check if there is already a file with this middleware name.
      */
     if (file_exists('../../app/Middleware/' . ucfirst($middleware) . 'Middleware.php')) {
-        echo 'error: - A file with this name already exists in the (Middleware) folder, please try another name.' . PHP_EOL;
+        echo 'error: - A file with this name already exists in the (app/Middleware) folder, please try another name.' . PHP_EOL;
 
         goto middleware;
     } else {
         $resource = fopen('../../app/Middleware/' . ucfirst($middleware) . 'Middleware.php', "w")
         or die("Unable to create file!");
 
-        fwrite($resource, getMiddlewareSkeleton(ucfirst($middleware)));
+        fwrite($resource, getControllerSkeleton(ucfirst($middleware)));
 
         fclose($resource);
 
@@ -42,7 +42,7 @@ if ($middleware) {
 /**
  * Get middleware class skeleton.
  */
-function getMiddlewareSkeleton(string $middlewareName): string {
+function getControllerSkeleton(string $middlewareName): string {
     return sprintf(
         "<?php
 

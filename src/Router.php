@@ -241,7 +241,7 @@ class Router {
     }
 
     /**
-     * This method is called from the run method, this method resolves all routers.
+     * This method is called from the '$this->run()' method, this method resolves all routers.
      * And it is decided which router will do which job.
      */
     public function resolve(): mixed {
@@ -325,14 +325,14 @@ class Router {
 
                         // Call callback method.
                         if (is_callable($routes['callback'])) {
-                            return call_user_func($routes['callback'], ...$params);
+                            return call_user_func_array($routes['callback'], [$this->request, ...$params]);
                         } elseif (is_array($routes['callback'])) {
                             if (is_string($routes['callback'][0]) && is_string($routes['callback'][1])) {
                                 $controllerInstance = new $routes['callback'][0];
 
                                 return call_user_func_array(
                                     [$controllerInstance, $routes['callback'][1]],
-                                    [$this->request]
+                                    [$this->request, ...$params]
                                 );
                             }
                         }
@@ -351,9 +351,28 @@ class Router {
     }
 
     /**
-     * Finds routes by route name.
+     * Run Application.
      */
-    public function route(string $name, string | array $params = null) {
+    public function run() : void {
+        try {
+            $content = $this->resolve();
+
+            if (is_array($content) || is_object($content)) {
+                echo var_export($content, true);
+            } else {
+                echo $content;
+            }
+
+        } catch (\Exception $error) {
+            http_response_code($error->getCode());
+            echo $error->getMessage();
+        }
+    }
+
+    /**
+     * Finds route by route name and redirect this route.
+     */
+    public function toRoute(string $name, string | array $params = null) {
         // Iterate over all routes which defined with the Requested method.
         foreach ($this->routes[$this->request->method()] as $routes) {
             // Check if requested name and route name equal.
