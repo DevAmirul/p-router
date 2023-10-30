@@ -23,19 +23,19 @@ if ($controller) {
     /**
      * Check if there is already a file with this middleware name.
      */
-    if (file_exists('../../app/Controller/' . ucfirst($controller) . 'Controller.php')) {
+    if (file_exists('../../app/Controllers/' . ucfirst($controller) . 'Controller.php')) {
         echo 'error: - A file with this name already exists in the (app/Controller) folder, please try another name.' . PHP_EOL;
 
         goto controller;
     } else {
-        $resource = fopen('../../app/Controller/' . ucfirst($controller) . 'Controller.php', "w")
+        $resource = fopen('../../app/Controllers/' . ucfirst($controller) . 'Controller.php', "w")
         or die("Unable to create file!");
 
         fwrite($resource, getControllerSkeleton(ucfirst($controller)));
 
         fclose($resource);
 
-        echo 'Created Controller: ' . ucfirst($controller) . 'Controller.php' . PHP_EOL;
+        echo 'Created app/Controllers/' . ucfirst($controller) . 'Controller.php' . PHP_EOL;
     }
 }
 
@@ -46,18 +46,18 @@ function getControllerSkeleton(string $controllerName): string {
     return sprintf(
     "<?php
 
-    namespace App\Controllers;
+namespace App\Controllers;
 
-    use Devamirul\PRouter\Request\Request;
-    use Devamirul\PRouter\Controller\BaseController;
+use Devamirul\PRouter\Request\Request;
+use Devamirul\PRouter\Controller\BaseController;
 
-    class %sController extends BaseController {
+class %sController extends BaseController {
 
-        /**
-         * Dummy method
-         */
-        public function index(Request \$request){
+    /**
+     * Dummy method
+     */
+    public function index(Request \$request){
 
-        }
-    }", $controllerName);
+    }
+}", $controllerName);
 }

@@ -23,19 +23,19 @@ if ($middleware) {
     /**
      * Check if there is already a file with this middleware name.
      */
-    if (file_exists('../../app/Middleware/' . ucfirst($middleware) . 'Middleware.php')) {
+    if (file_exists('../../app/Middlewares/' . ucfirst($middleware) . 'Middleware.php')) {
         echo 'error: - A file with this name already exists in the (app/Middleware) folder, please try another name.' . PHP_EOL;
 
         goto middleware;
     } else {
-        $resource = fopen('../../app/Middleware/' . ucfirst($middleware) . 'Middleware.php', "w")
+        $resource = fopen('../../app/Middlewares/' . ucfirst($middleware) . 'Middleware.php', "w")
         or die("Unable to create file!");
 
         fwrite($resource, getControllerSkeleton(ucfirst($middleware)));
 
         fclose($resource);
 
-        echo 'Created Middleware: ' . ucfirst($middleware) . 'Middleware.php' . PHP_EOL;
+        echo 'Created app/Middlewares/' . ucfirst($middleware) . 'Middleware.php' . PHP_EOL;
     }
 }
 
@@ -46,7 +46,7 @@ function getControllerSkeleton(string $middlewareName): string {
     return sprintf(
         "<?php
 
-    namespace App\Middleware;
+    namespace App\Middlewares;
 
     use Devamirul\PRouter\Interfaces\Middleware;
     use Devamirul\PRouter\Request\Request;

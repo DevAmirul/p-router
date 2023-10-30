@@ -1,7 +1,5 @@
 <?php
 
-use App\Middleware\AuthMiddleware;
-
 return [
 
     /**
@@ -9,7 +7,7 @@ return [
      */
     'middleware' => [
         'csrf' => Devamirul\PRouter\Middleware\Middlewares\CsrfMiddleware::class,
-        'auth' => App\Middleware\AuthMiddleware::class,
+        'auth' => App\Middlewares\AuthMiddleware::class
     ],
 
     /**

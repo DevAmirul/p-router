@@ -2,7 +2,7 @@
 
 namespace Devamirul\PRouter\Middleware;
 
-use App\Middleware\AuthMiddleware;
+// use App\Middlewares\AuthMiddleware;
 use Devamirul\PRouter\Request\Request;
 
 class BaseMiddleware {
@@ -17,6 +17,7 @@ class BaseMiddleware {
 
         $configMiddlewares = config('middleware', 'middleware') ?? null;
 
+
         if (empty($configMiddlewares)) {
             throw new \Exception('Middleware config is empty', 404);
         }
@@ -26,7 +27,7 @@ class BaseMiddleware {
                 throw new \Exception('No matching middleware found for key' . $middleware);
             }
 
-            (new AuthMiddleware())->handle($request);
+            (new $configMiddlewares[$middleware]())->handle($request);
         }
     }
 

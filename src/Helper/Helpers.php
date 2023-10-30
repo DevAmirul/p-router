@@ -90,6 +90,7 @@ if (!function_exists('redirect')) {
      */
     function redirect(string $redirectLink): void {
         header('Location: ' . $redirectLink);
+        exit;
     }
 }
 

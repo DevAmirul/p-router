@@ -373,7 +373,7 @@ The command line interface will ask you for a middleware name, you enter a name.
 
 
 ```php
-namespace App\Http\Middleware;
+namespace App\Http\Middlewares;
 
 use Devamirul\PhpMicro\core\Foundation\Application\Request\Request;
 use Devamirul\PhpMicro\core\Foundation\Middleware\Interface\Middleware;
@@ -391,8 +391,6 @@ class AuthMiddleware implements Middleware {
 For example, This framework includes a middleware that verifies the user of your application is authenticated. If the user is not authenticated, the middleware will redirect the user to your application's login screen. However, if the user is authenticated, the middleware will allow the request to proceed further into the application.
 
 ```php
-use Devamirul\PhpMicro\core\Foundation\Application\Facade\Facades\Auth;
-use Devamirul\PhpMicro\core\Foundation\Application\Request\Request;
 
 public function handle(Request $request, array $guards) {
     if (!empty($guards)) {
@@ -415,7 +413,6 @@ Add your own middleware to this list and assign it an alias of your choice:
 ```php
 'middleware' => [
     'auth'  => App\Http\Middleware\AuthMiddleware::class,
-    'guest' => App\Http\Middleware\GuestMiddleware::class,
     'csrf'  => Devamirul\PhpMicro\core\Foundation\Middleware\Middlewares\CsrfMiddleware::class,
 ],
 ```

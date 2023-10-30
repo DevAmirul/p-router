@@ -83,13 +83,13 @@ class Request {
     public function input(?string $key = null, mixed $default = null): mixed {
         if ($key) {
             if (isset($_REQUEST[$key])) {
-                return $_REQUEST[$key];
+                return strip_tags($_REQUEST[$key]);
             }
         } else {
             $input = [];
 
             foreach ($_REQUEST as $index => $value) {
-                $input[$index] = $value;
+                $input[$index] = strip_tags($value);
             }
             return $input;
         }
@@ -103,7 +103,7 @@ class Request {
         $all = [];
 
         foreach ($_REQUEST as $key => $value) {
-            $all[$key] = $value;
+            $all[$key] = strip_tags($value);
         }
         return $all;
     }
@@ -117,7 +117,7 @@ class Request {
 
         foreach ($args as $key) {
             if (isset($_REQUEST[$key])) {
-                $only[$key] = $_REQUEST[$key];
+                $only[$key] = strip_tags($_REQUEST[$key]);
             }
         }
         return $only;
@@ -127,16 +127,15 @@ class Request {
      * Set param.
      */
     public function setParam($key, $value): void {
-        $this->params[$key] = $value;
+        $this->params[$key] = strip_tags($value);
     }
 
-    // TODO: added to helper function.
     /**
      * Get param.
      */
     public function getParam(?string $key = null): string | array | null {
-        if (isset($this->params[$key])) {
-            return $this->params[$key];
+        if ($key) {
+            return $this->params[$key] ?? null;
         } elseif (!empty($this->params)) {
             return $this->params;
         } else {

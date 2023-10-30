@@ -254,9 +254,8 @@ class Router {
 
             // Loop all route.
             foreach ($this->routes[$this->request->method()] as $routes) {
-                $url        = '';
-                $params     = [];
-                $whereIndex = 0;
+                $url    = '';
+                $params = [];
 
                 // Check if requested path size and route path size equal
                 // or check if "*" finds it in the route path
@@ -287,11 +286,12 @@ class Router {
                             // Check if the dynamic param matches the regular expression.
                             // Throw exception if no match.
                             if ($routes['where']) {
-                                if (!preg_match('/' . $routes['where'][$whereIndex] . '/', $path[$key])) {
+                                if (!preg_match('/' . $routes['where'][ltrim($route, ':')] . '/', $path[$key])) {
                                     throw new Exception('Route param expression does not match', 404);
                                 }
-                                $whereIndex++;
                             }
+
+                            $this->request->setParam(ltrim($route, ':'), $path[$key]);
                             $params[] = $path[$key];
                             $url .= '/' . $path[$key];
 
@@ -325,14 +325,17 @@ class Router {
 
                         // Call callback method.
                         if (is_callable($routes['callback'])) {
-                            return call_user_func_array($routes['callback'], [$this->request, ...$params]);
+
+                            return call_user_func($routes['callback'], $this->request);
+
                         } elseif (is_array($routes['callback'])) {
+
                             if (is_string($routes['callback'][0]) && is_string($routes['callback'][1])) {
                                 $controllerInstance = new $routes['callback'][0];
 
                                 return call_user_func_array(
                                     [$controllerInstance, $routes['callback'][1]],
-                                    [$this->request, ...$params]
+                                    [$this->request]
                                 );
                             }
                         }
@@ -353,7 +356,7 @@ class Router {
     /**
      * Run Application.
      */
-    public function run() : void {
+    public function run(): void {
         try {
             $content = $this->resolve();
 
@@ -372,53 +375,48 @@ class Router {
     /**
      * Finds route by route name and redirect this route.
      */
-    public function toRoute(string $name, string | array $params = null) {
+    public function toRoute(string $name, array $params = null) {
         // Iterate over all routes which defined with the Requested method.
+
         foreach ($this->routes[$this->request->method()] as $routes) {
+
             // Check if requested name and route name equal.
             if ($routes['name'] === $name) {
-                if (is_string($params)) {
-                    $params = array($params);
-                }
 
                 // Check the route dynamic params.
                 if (!$routes['where']) {
-                    $url        = '';
-                    $whereIndex = 0;
+                    $url = '';
 
                     foreach ($routes['path'] as $key => $value) {
                         if (str_starts_with($value, ':') && $params) {
-                            $url .= '/' . $params[$whereIndex];
-                            $whereIndex++;
+                            $url .= '/' . $params[ltrim($value, ':')];
 
                         } elseif (str_starts_with($value, ':') && !$params) {
                             throw new Exception('This route\'s param missing', 404);
-                        } elseif (!str_starts_with($value, ':') && $params) {
-                            throw new Exception('Passed unnecessary params to route function', 404);
                         } else {
-                            $url .= '/' . $value;
+                            if (sizeof($routes['path']) - 1 === $key && $params) {
+                                $url .= '/' . $value . '?' . http_build_query($params);
+                            } else {
+                                $url .= '/' . $value;
+                            }
                         }
                     }
+
                     redirect($url);
 
-                } elseif (
-                    isset($routes['where']) &&
-                    isset($params) &&
-                    (sizeof($params) === sizeof($routes['where']))
-                    ) {
-                    foreach ($routes['where'] as $key => $value) {
-                        if (!preg_match('/' . $value . '/', $params[$key])) {
+                } elseif (isset($routes['where']) && isset($params) && (sizeof($params) === sizeof($routes['where']))) {
+
+                    foreach ($routes['where'] as $key => $expression) {
+                        if (!preg_match('/' . $expression . '/', $params[$key])) {
                             throw new Exception('Route param expression does not match', 404);
                         }
                     }
 
                     $url        = '';
-                    $whereIndex = 0;
 
                     foreach ($routes['path'] as $key => $value) {
                         if (str_starts_with($value, ':')) {
-                            $url .= '/' . $params[$whereIndex];
-                            $whereIndex++;
+                            $url .= '/' . $params[ltrim($value, ':')];
                         } else {
                             $url .= '/' . $value;
                         }
@@ -469,7 +467,7 @@ class Router {
         // Set name to root
         $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
 
-        $this->routeNames[$method][]                                           = $name;
+        $this->routeNames[$method][] = $name;
     }
 
     /**
@@ -477,7 +475,16 @@ class Router {
      */
     public function helperFunctionOfMiddleware(string | array $middleware, string $method): void {
         // Set middleware to root
-        $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middleware;
+        if (is_array($middleware)) {
+            if (is_array($this->routes[$method][array_key_last($this->routes[$method])]['middleware'])) {
+                $array_merge                                                                 = array_merge($this->routes[$method][array_key_last($this->routes[$method])]['middleware'], $middleware);
+                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'] = $array_merge;
+            } else {
+                $this->routes[$method][array_key_last($this->routes[$method])]['middleware'] = $middleware;
+            }
+        } else {
+            $this->routes[$method][array_key_last($this->routes[$method])]['middleware'][] = $middleware;
+        }
     }
 
 }

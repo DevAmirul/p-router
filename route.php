@@ -1,6 +1,9 @@
 <?php
 
-use Devamirul\PRouter\Request\Request;
+
+// use App\Controllers\HomeController;
+// use Devamirul\PRouter\Request\Request;
+
 
 // not return error.
 // $router->get('/:id', function (Request $request) {
@@ -8,9 +11,18 @@ use Devamirul\PRouter\Request\Request;
 // })->name('home');
 
 
-$router->get('/', function (Request $request) {
-    return $request->method();
-})->name('home');
+$router->get('/home', function ($request) {
+    return toRoute('login', ['id'=>2]);
+});
+
+$router->get('/login/:id', function ($request) {
+    return $request->getParam();
+})->name('login')->where(['id' => '^\d+$']);
+
+
+// use App\Controllers\HomeController;
+
+// $router->get('/login/:id', [HomeController::class, 'index']);
 
 // $router->match(['post', 'put', 'delete'], '/match', function () {
 //     echo 'user';
