@@ -45,6 +45,24 @@ Installation is possible using Composer.
 ```bash
 composer require devamirul/p-router
 ```
+Add the following script to `composer.json` file:
+
+```json
+"scripts": {
+    "start": [
+        "php -S 127.0.0.1:8000"
+    ],
+    "middleware": "cd vendor/devamirul/p-router/src/CLI && php createMiddleware.php && cd -",
+    "controller": "cd vendor/devamirul/p-router/src/CLI && php createController.php && cd -",
+    "app": "cd vendor/devamirul/p-router/src/CLI && php createApp.php && cd -"
+}
+```
+
+Run the following command:
+
+```bash
+composer app
+```
 
 ## Examples:
 
