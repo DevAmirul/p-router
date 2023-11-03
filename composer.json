@@ -22,7 +22,8 @@
     "authors": [
         {
             "name": "Amirul islam",
-            "email": "inbox.amirul@gmail.com"
+            "email": "inbox.amirul@gmail.com",
+            "homepage": "https://amirul.web.app"
         }
     ],
     "minimum-stability": "dev",
