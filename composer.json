@@ -32,11 +32,5 @@
     {
         "php": ">=8.00",
         "ext-json": "*"
-    },
-    "scripts":
-    {
-        "middleware": "cd vendor/devamirul/p-router/src/CLI && php createMiddleware.php && cd -",
-        "controller": "cd vendor/devamirul/p-router/src/CLI && php createController.php && cd -",
-        "app": "cd vendor/devamirul/p-router/src/CLI && php createApp.php && cd -"
     }
 }
