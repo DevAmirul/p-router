@@ -17,7 +17,7 @@ $router->get('/', function ($request) {
 
 $router->get('/home', function () {
     // return toRoute('login', ['id'=>2]);
-    return $_GET;
+    return redirect('/login/1');
 })->name('home');
 
 // $router->get('/login/:id/:name', function ($request) {

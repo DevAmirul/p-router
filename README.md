@@ -614,10 +614,7 @@ Redirect link:
 ```php
 redirect('/redirect-link');
 ```
-Create a new redirect response to the previous location:
-```php
-back();
-```
+
 Finds route by route name and redirect this route:
 ```php
 toRoute('users');

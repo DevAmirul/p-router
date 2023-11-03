@@ -11,6 +11,6 @@ class HomeController extends BaseController {
      * Dummy method
      */
     public function index(){
-        return 'home';
+        return 'home con';
     }
 }
