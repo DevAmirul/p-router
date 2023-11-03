@@ -1,6 +1,6 @@
 {
     "name": "devamirul/p-router",
-    "description": "Simple, lightweight PHP router that is easy to get integrated any raw PHP project. Heavily inspired by the Laravel router.",
+    "description": "Simple, lightweight, and powerful PHP Router with rich features like Middlewares and Controllers is a simple and useful router class. Heavily inspired by the way Laravel handles routing.",
     "type": "package",
     "keywords": [
         "router",

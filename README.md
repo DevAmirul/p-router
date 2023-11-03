@@ -348,11 +348,11 @@ Remember, any HTML forms pointing to POST, PUT, PATCH, or DELETE routes that are
 
 ## Middlewares:
 
-`app/Middlewares`: Middleware provide a convenient mechanism for inspecting and filtering HTTP requests entering your application.
+`app/Middlewares`: Middleware provides a convenient mechanism for inspecting and filtering HTTP requests entering your application.
 
-The predefined middleware files are :- `AuthMiddleware.php` `CsrfMiddleware.php`
+The predefined middleware files are:- `AuthMiddleware.php` `CsrfMiddleware.php`
 
-<em>**By default you will get request instance in handle method.**</em>
+<em>**By default you will get a request instance in the handle method.**</em>
 
 ### Make middleware:
 
@@ -362,7 +362,7 @@ To create a new middleware, use the `composer middleware` command:
 composer middleware
 ```
 
-The command line interface will ask you for a middleware name, you enter a name. It will automatically add "Middleware" to the name you provided. For example you want to create a middleware named "example". Then your middleware class will be `ExampleMiddleware.php`
+The command line interface will ask you for a middleware name, you enter a name. It will automatically add "Middleware" to the name you provided. For example, you want to create a middleware named "example". Then your middleware class will be `ExampleMiddleware.php`
 
 
 ```php
@@ -385,7 +385,7 @@ For example, This framework includes a middleware that verifies the user of your
 
 ```php
 public function handle(Request $request) {
-    if (!$_SESSION['user']) {
+    if (!isset($_SESSION['user'])) {
         redirect('/login');
     }
     return;
