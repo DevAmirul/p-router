@@ -5,7 +5,7 @@
  */
 controller:
 
-$appFolder = '../../../../app';
+$appFolder = '../../../../../app';
 
 /**
  * First check if 'app' folder exists.
@@ -46,7 +46,7 @@ if ($controller) {
  */
 function getControllerSkeleton(string $controllerName): string {
     return sprintf(
-    "<?php
+        "<?php
 
 namespace App\Controllers;
 

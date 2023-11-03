@@ -5,7 +5,7 @@
  */
 middleware:
 
-$appFolder = '../../../../app';
+$appFolder = '../../../../../app';
 
 /**
  * First check if 'app' folder exists.

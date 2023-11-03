@@ -4,7 +4,7 @@
  * Create app by CLI
  */
 
-$appFolder = '../../../../app';
+$appFolder = '../../../../../app';
 
 /**
  * Check if the folder named 'ccc' already exists.
@@ -63,8 +63,8 @@ if (is_dir($appFolder)) {
  * Get app/config/middleware.php file skeleton.
  */
 function getConfigMiddlewareSkeleton(): string {
-    return
-"<?php
+    return;
+    "<?php
 
 return [
 
@@ -92,8 +92,8 @@ return [
  * Get Middleware class skeleton.
  */
 function getMiddlewareSkeleton(): string {
-    return
-"<?php
+    return;
+    "<?php
 
 namespace App\Middlewares;
 
@@ -120,7 +120,7 @@ class AuthMiddleware implements Middleware {
  */
 function getControllerSkeleton(): string {
     return sprintf(
-    "<?php
+        "<?php
 
 namespace App\Controllers;
 
