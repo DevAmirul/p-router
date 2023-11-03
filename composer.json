@@ -11,25 +11,23 @@
         "request-handler"
     ],
     "license": "MIT",
-    "autoload":
-    {
+    "autoload": {
         "files": [
             "src/Helper/Helpers.php"
         ],
-        "psr-4":
-        {
+        "psr-4": {
             "App\\": "app/",
             "Devamirul\\PRouter\\": "src/"
         }
     },
     "authors": [
-    {
-        "name": "Amirul islam",
-        "email": "inbox.amirul@gmail.com"
-    }],
+        {
+            "name": "Amirul islam",
+            "email": "inbox.amirul@gmail.com"
+        }
+    ],
     "minimum-stability": "dev",
-    "require":
-    {
+    "require": {
         "php": ">=8.00",
         "ext-json": "*"
     }

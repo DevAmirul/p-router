@@ -63,7 +63,7 @@ if (is_dir($appFolder)) {
  * Get app/config/middleware.php file skeleton.
  */
 function getConfigMiddlewareSkeleton(): string {
-    return;
+    return
     "<?php
 
 return [
@@ -92,7 +92,7 @@ return [
  * Get Middleware class skeleton.
  */
 function getMiddlewareSkeleton(): string {
-    return;
+    return
     "<?php
 
 namespace App\Middlewares;
