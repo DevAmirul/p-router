@@ -48,6 +48,11 @@ composer require devamirul/p-router
 Add the following script to `composer.json` file:
 
 ```json
+"autoload": {
+    "psr-4": {
+        "App\\": "app/",
+    }
+},
 "scripts": {
     "start": [
         "php -S 127.0.0.1:8000"
@@ -125,9 +130,21 @@ $router->any($uri, $callback);
 
 ### Basic Routes:
 
-Routes accept a URI and a closure or a array, providing a very simple and expressive method of defining routes and behavior without complicated routing configuration files:
+Routes accept a URI and a closure or a array, providing a very simple and expressive method of defining routes and behavior without complicated routing configuration files.
+
+1. First define App root path.
+2. Require vendor autoload file.
+3. Create `router` singleton instance.
+4. Define routes.
+5. Run the application via the `run()` method.
 
 ```php
+<?php
+/**
+ * Define root directory.
+ */
+define('APP_ROOT', dirname(__FILE__));
+
 /**
  * Require composer autoloader.
  */
@@ -143,12 +160,12 @@ $router->get('/greeting', function () {
 
 // Resolve and run application.
 $router->run();
+?>
 ```
 
 Or create a separate `route.php` file and include that file in the `index.php` file.
 
 First create route.php or name the file according to your choice:
-
 
 ```php
 <?php

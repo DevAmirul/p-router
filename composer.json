@@ -16,7 +16,6 @@
             "src/Helper/Helpers.php"
         ],
         "psr-4": {
-            "App\\": "app/",
             "Devamirul\\PRouter\\": "src/"
         }
     },
