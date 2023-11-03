@@ -292,7 +292,6 @@ class Router {
                             $this->request->setParam(ltrim($route, ':'), $path[$key]);
                             $params[] = $path[$key];
                             $url .= '/' . $path[$key];
-
                         }
                         // check if "*" finds it in the route path.
                         elseif ($route === '*') {

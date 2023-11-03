@@ -11,12 +11,14 @@ use Devamirul\PRouter\Request\Request;
 
 
 $router->get('/', function ($request) {
-    return '/';
+    // return '/';
+    return toRoute('home');
 });
 
 $router->get('/home', function () {
-    return toRoute('login', ['id'=>2]);
-})->middleware('auth');
+    // return toRoute('login', ['id'=>2]);
+    return $_GET;
+})->name('home');
 
 // $router->get('/login/:id/:name', function ($request) {
 //     return $request->getParam();

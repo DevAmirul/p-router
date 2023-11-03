@@ -94,15 +94,6 @@ if (!function_exists('redirect')) {
     }
 }
 
-if (!function_exists('back')) {
-    /**
-     * Create a new redirect response to the previous location.
-     */
-    function back(): void {
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
-    }
-}
-
 if (!function_exists('toRoute')) {
     /**
      * Finds route by route name and redirect this route.

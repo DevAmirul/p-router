@@ -17,7 +17,6 @@ class BaseMiddleware {
 
         $configMiddlewares = config('middleware', 'middleware') ?? null;
 
-
         if (empty($configMiddlewares)) {
             throw new \Exception('Middleware config is empty', 404);
         }
@@ -30,5 +29,4 @@ class BaseMiddleware {
             (new $configMiddlewares[$middleware]())->handle($request);
         }
     }
-
 }
