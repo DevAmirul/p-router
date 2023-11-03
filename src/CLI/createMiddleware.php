@@ -5,10 +5,12 @@
  */
 middleware:
 
+$appFolder = '../../../../app';
+
 /**
  * First check if 'app' folder exists.
  */
-if (!is_dir('../../app')) {
+if (!is_dir($appFolder)) {
     echo 'Folder "app" not found. Please run "composer app"';
     exit;
 }
@@ -23,12 +25,12 @@ if ($middleware) {
     /**
      * Check if there is already a file with this middleware name.
      */
-    if (file_exists('../../app/Middlewares/' . ucfirst($middleware) . 'Middleware.php')) {
-        echo 'error: - A file with this name already exists in the (app/Middleware) folder, please try another name.' . PHP_EOL;
+    if (file_exists($appFolder . '/Middlewares/' . ucfirst($middleware) . 'Middleware.php')) {
+        echo 'error: - A file with this name already exists in the (app/Middlewares) folder, please try another name.' . PHP_EOL;
 
         goto middleware;
     } else {
-        $resource = fopen('../../app/Middlewares/' . ucfirst($middleware) . 'Middleware.php', "w")
+        $resource = fopen($appFolder . '/Middlewares/' . ucfirst($middleware) . 'Middleware.php', "w")
         or die("Unable to create file!");
 
         fwrite($resource, getControllerSkeleton(ucfirst($middleware)));

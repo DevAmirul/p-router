@@ -4,7 +4,7 @@
  * Create app by CLI
  */
 
-$appFolder = '../../app';
+$appFolder = '../../../../app';
 
 /**
  * Check if the folder named 'ccc' already exists.
@@ -19,7 +19,7 @@ if (is_dir($appFolder)) {
          * Create config.
          */
         if (mkdir($appFolder . '/config')) {
-            $resource = fopen('../../app/config/' . 'middleware.php', "w")
+            $resource = fopen($appFolder . '/config/' . 'middleware.php', "w")
             or die("Unable to create file!");
 
             fwrite($resource, getConfigMiddlewareSkeleton());
@@ -33,7 +33,7 @@ if (is_dir($appFolder)) {
          * Create middleware.
          */
         if (mkdir($appFolder . '/Middlewares')) {
-            $resource = fopen('../../app/Middlewares/AuthMiddleware.php', "w")
+            $resource = fopen($appFolder . '/Middlewares/AuthMiddleware.php', "w")
             or die("Unable to create file!");
 
             fwrite($resource, getMiddlewareSkeleton());
@@ -47,7 +47,7 @@ if (is_dir($appFolder)) {
          * Create controller.
          */
         if (mkdir($appFolder . '/Controllers')) {
-            $resource = fopen('../../app/Controllers/HomeController.php', "w")
+            $resource = fopen($appFolder . '/Controllers/HomeController.php', "w")
             or die("Unable to create file!");
 
             fwrite($resource, getControllerSkeleton());
@@ -106,7 +106,10 @@ class AuthMiddleware implements Middleware {
      * Check if the request is authenticated and act accordingly.
      */
     public function handle(Request \$request): void {
-        //
+        if (!isset(\$_SESSION['user'])) {
+            redirect('/login');
+        }
+        return;
     }
 
 }";

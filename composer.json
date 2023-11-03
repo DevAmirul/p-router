@@ -16,7 +16,6 @@
             "src/Helper/Helpers.php"
         ],
         "psr-4": {
-            "App\\": "app/",
             "Devamirul\\PRouter\\": "src/"
         }
     },
@@ -30,13 +29,5 @@
     "require": {
         "php": ">=8.00",
         "ext-json": "*"
-    },
-    "scripts": {
-        "start": [
-            "php -S 127.0.0.1:8000"
-        ],
-        "middleware": "cd src/CLI && php createMiddleware.php && cd -",
-        "controller": "cd src/CLI && php createController.php && cd -",
-        "app": "cd src/CLI && php createApp.php && cd -"
     }
 }
