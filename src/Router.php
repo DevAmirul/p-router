@@ -245,8 +245,6 @@ class Router {
      * And it is decided which router will do which job.
      */
     public function resolve(): mixed {
-        // dd($this->routes);
-
         $path = explode('/', ltrim($this->request->path(), '/'));
 
         // Check if the requested method is set.

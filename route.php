@@ -1,8 +1,7 @@
 <?php
 
-
-// use App\Controllers\HomeController;
-// use Devamirul\PRouter\Request\Request;
+use App\Controllers\HomeController;
+use Devamirul\PRouter\Request\Request;
 
 
 // not return error.
@@ -11,33 +10,36 @@
 // })->name('home');
 
 
-$router->get('/home', function ($request) {
-    return toRoute('login', ['id'=>2]);
+$router->get('/', function ($request) {
+    return '/';
 });
 
-$router->get('/login/:id', function ($request) {
-    return $request->getParam();
-})->name('login')->where(['id' => '^\d+$']);
+$router->get('/home', function () {
+    return toRoute('login', ['id'=>2]);
+})->middleware('auth');
+
+// $router->get('/login/:id/:name', function ($request) {
+//     return $request->getParam();
+// })->name('login')->where(['id' => '^\d+$','name' => '^\d+$'])
+// ->middleware('auth');
 
 
-// use App\Controllers\HomeController;
+$router->get('/login/:id', [HomeController::class, 'index'])->name('login');
 
-// $router->get('/login/:id', [HomeController::class, 'index']);
-
-// $router->match(['post', 'put', 'delete'], '/match', function () {
-//     echo 'user';
-// })->name('matchName');
+// $router->match(['get', 'put', 'delete'], '/match/:id', function () {
+//     echo 'match';
+// })->name('matchName')->where(['id' => '^\d+$'])
+// ->middleware('auth');
 
 // $router->any('/anypath/xx/*', function () {
 //     echo 'echo any';
-// })->name('anyName');
+// })->name('anyName')
+// ->middleware(['auth', 'any']);
 
 // $router->get('/getpath/:id', function (Request $request) {
 //     echo 'echo get';
 // })->name('getName');
 
-// $router->fallback(function () {
-//     echo 'fallback';
-// });
-
-// ->middleware('auth');
+$router->fallback(function () {
+    echo 'fallback';
+});

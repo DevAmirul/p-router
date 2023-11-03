@@ -10,7 +10,7 @@ class HomeController extends BaseController {
     /**
      * Dummy method
      */
-    public function index(int $id){
-        return $id;
+    public function index(){
+        return 'home';
     }
 }
