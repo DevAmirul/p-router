@@ -90,7 +90,7 @@ $router->get('/', [WelcomeController::class, 'index'])->name('home');
 ```php
 $router->get('/users/:id', function(int $id){
     return 'User id - ' . $id;
-})->where('^\d+$')->name('user');
+})->where(['id' => '^\d+$'])->name('user');
 ```
 
 #### Middleware:
@@ -98,7 +98,7 @@ $router->get('/users/:id', function(int $id){
 ```php
 $router->get('/users/:id', function(int $id){
     return 'User id - ' . $id;
-})->middleware('auth')->where('^\d+$')->name('user');
+})->middleware('auth')->where(['id' => '^\d+$'])->name('user');
 ```
 **You can do method chaining if you want.**
 
@@ -329,6 +329,9 @@ class UserController extends BaseController {
 
 Occasionally you may need to specify a route parameter that may not always be present in the URI. You may do so by placing a question sign  `?` mark after the parameter:
 
+**It is important to note that optional parameter are always placed at the end of the URLs.**
+**Optional parameters cannot be checked with regular expressions.**
+
 ```php
 $router->get('/user/:name?', function () {
     //
@@ -343,11 +346,11 @@ The `where()` method takes a regular expression as parameter which determines ho
 ```php
 $router->get('/user/:id', function () {
     // ...
-})->where('^\d+$');
+})->where(['id' => '^\d+$']);
 
-$router->get('/user/:name', function () {
+$router->get('/user/:id', function () {
     // ...
-})->where('name', '[A-Za-z]+');
+})->where(['id' => '^\d+$']);
 ```
 
 Sometimes you may need to register a route that responds to multiple HTTP verbs. You may do so using the match method. Or, you may even register a route that responds to all HTTP verbs using the any method:
