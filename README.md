@@ -67,6 +67,9 @@ Add the following script to `composer.json` file:
 Run the following command:
 
 ```bash
+composer dump-autoload
+```
+```bash
 composer app
 ```
 
