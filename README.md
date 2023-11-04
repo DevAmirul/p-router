@@ -51,7 +51,7 @@ Add the following script to `composer.json` file:
 ```json
 "autoload": {
     "psr-4": {
-        "App\\": "app/",
+        "App\\": "app/"
     }
 },
 "scripts": {
