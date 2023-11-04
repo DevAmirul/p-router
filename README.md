@@ -35,6 +35,7 @@ Simple, lightweight and powerful PHP Router. which also has rich features like M
 - **[Middlewares](#middlewares)**
 - **[Controllers](#Controllers)**
 - **[Request](#Request)**
+- **[Handle Html View Content File](#Handle-Html-View-Content-File)**
 - **[Helpers](#Helpers)**
 
 
@@ -112,7 +113,7 @@ $router->get('/users/:id', function(int $id){
 `app/Controllers`: Create your custom controllers in this folder.
 
 
-## Routers:
+## Routes:
 
 ### Available Router Methods:
 
@@ -203,6 +204,8 @@ $router->run();
 Let's discuss the second parameter. The second parameter accepts a closure or an array of key value pairs. The 'key' of the array will be a class and the value will be a method of the class, the method will be invoked by the class.
 
 ```php
+use App\Controllers\WelcomeController;
+
 $router->get('/', [WelcomeController::class, 'index'])->name('home');
 ```
 
@@ -582,6 +585,48 @@ Also you will get methods.
 
 `isGet()` `isPost()` `isPut()` `isPatch()` `isDelete()`
 
+
+## Handle Html View Content File:
+
+You can easily view `html content` from a controller or callback function.
+
+Simply `require' the file you want to view:
+
+```php
+$router->get('/', function () {
+    require_once './home.php';
+});
+```
+In Content file:
+
+```php
+<body>
+    <h1>Home Page</h1>
+</body>
+```
+
+You can easily view the data in the `content` file:
+
+```php
+$router->get('/', function (Request $request) {
+    $name = 'Amirul islam';
+
+    require_once './home.php';
+});
+```
+In Content file:
+
+```php
+<body>
+    <h1>Welcome Mr <?= $name ?> </h1>
+
+    <?php
+        foreach ($request->input() as $value) {
+            echo $value;
+        }
+    ?>
+</body>
+```
 
 ## Helpers:
 
