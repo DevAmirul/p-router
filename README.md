@@ -437,7 +437,7 @@ public function handle(Request $request): void {
 ```
 ### Add middleware
 
-After creating the middleware add it to the middleware array in the 'config/middleware.php' file.
+After creating the middleware add it to the middleware array in the 'app/config/middleware.php' file.
 Add your own middleware to this list and assign it an alias of your choice:
 
 ```php
@@ -459,7 +459,7 @@ Router::get('/users/:id', function(){
 You can assign multiple middleware at once if you want:
 
 ```php
-Router::get('/users/:id', function(){
+Router::put('/users/:id', function(){
     //
 })->middleware(['auth','csrf']);
 ```
@@ -499,6 +499,8 @@ public function handle(Request $request, array $guards) {
 #### Set default middlewares:
 
 If you want to set some middleware to Https verbs by default, you can do that very easily, The defined middleware will run when that https method request is handled:
+
+Open `app/config/middleware.php`
 
 ```php
 'get'        => [],
