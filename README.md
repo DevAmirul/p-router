@@ -701,10 +701,10 @@ request()->input();
 
 Redirect link:
 ```php
-redirect('/redirect-link');
+return redirect('/redirect-link');
 ```
 
 Finds route by route name and redirect this route:
 ```php
-toRoute('users');
+return toRoute('users');
 ```
