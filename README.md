@@ -10,7 +10,7 @@
 
 ```
 
-Simple, lightweight and powerful PHP Router. which also has rich features like Middlewares and Controllers is simple and useful router class for PHP. Heavily inspired by the way Laravel handles routing.
+A simple, lightweight, and powerful PHP Router with rich features like Middleware and Controllers. Heavily inspired by the way Laravel handles routing.
 
 ## Features:
 
@@ -419,7 +419,7 @@ class AuthMiddleware implements Middleware {
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request) {
+    public function handle(Request $request): void {
         //
     }
 }
@@ -428,7 +428,7 @@ class AuthMiddleware implements Middleware {
 For example, This framework includes a middleware that verifies the user of your application is authenticated. If the user is not authenticated, the middleware will redirect the user to your application's login screen. However, if the user is authenticated, the middleware will allow the request to proceed further into the application.
 
 ```php
-public function handle(Request $request) {
+public function handle(Request $request): void {
     if (!isset($_SESSION['user'])) {
         redirect('/login');
     }
