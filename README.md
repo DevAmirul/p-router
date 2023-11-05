@@ -92,16 +92,16 @@ $router->get('/', [WelcomeController::class, 'index'])->name('home');
 #### Dynamic Route:
 
 ```php
-$router->get('/users/:id', function(int $id){
-    return 'User id - ' . $id;
+$router->get('/users/:id', function(){
+    //
 })->where(['id' => '^\d+$'])->name('user');
 ```
 
 #### Middleware:
 
 ```php
-$router->get('/users/:id', function(int $id){
-    return 'User id - ' . $id;
+$router->get('/users/:id', function(){
+    //
 })->middleware('auth')->where(['id' => '^\d+$'])->name('user');
 ```
 **You can do method chaining if you want.**
@@ -258,7 +258,7 @@ return toRoute('profile');
 If the named route defines parameters, you may pass the parameters as the second argument to the `toRoute` function. The given parameters will automatically be inserted into the generated URL in their correct positions:
 
 ```php
-$router->get('/user/{id}/profile', function (string $id) {
+$router->get('/user/:id/profile', function () {
     // ...
 })->name('profile');
 
@@ -268,7 +268,7 @@ return toRoute('profile', ['id' => 1]);
 If you pass additional parameters in the array, those key / value pairs will automatically be added to the generated URL's query string:
 
 ```php
-$router->get('/user/{id}/profile', function (string $id) {
+$router->get('/user/:id/profile', function () {
     // ...
 })->name('profile');
 
