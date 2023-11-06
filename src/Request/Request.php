@@ -126,7 +126,7 @@ class Request {
     /**
      * Set param.
      */
-    public function setParam($key, $value): void {
+    public function setParam(string $key, string $value): void {
         $this->params[$key] = strip_tags($value);
     }
 
@@ -141,5 +141,12 @@ class Request {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Empty param.
+     */
+    public function emptyParam(): void {
+        unset($this->params);
     }
 }

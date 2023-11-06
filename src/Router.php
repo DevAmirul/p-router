@@ -289,6 +289,9 @@ class Router {
                                     throw new Exception('The optional parameter must be used as the last parameter in the URL', 404);
                                 } elseif (str_ends_with($implodeRoutePath, $route) && isset($path[$key])) {
                                     $url .= '/' . $path[$key];
+
+                                    $this->request->setParam(ltrim(rtrim($route, '?'), ':'), $path[$key]);
+
                                     goto url;
                                 } elseif (str_ends_with($implodeRoutePath, $route) && !isset($path[$key])) {
                                     goto url;
@@ -311,6 +314,8 @@ class Router {
                             if ($key > sizeof($path) - 1) {
                                 return $this->fallbackHandling();
                             }
+
+                            $this->request->emptyParam();
 
                             foreach (range($key, sizeof($path) - 1) as $pathKey) {
                                 $url .= '/' . $path[$pathKey];
