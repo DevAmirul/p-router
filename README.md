@@ -337,7 +337,6 @@ class UserController extends BaseController {
 Occasionally you may need to specify a route parameter that may not always be present in the URI. You may do so by placing a question sign  `?` mark after the parameter:
 
 **It is important to note that optional parameter are always placed at the end of the URLs.**
-**Optional parameters cannot be checked with regular expressions.**
 
 ```php
 $router->get('/user/:name?', function () {
@@ -354,10 +353,22 @@ The `where()` method takes a regular expression as parameter which determines ho
 $router->get('/user/:id', function () {
     // ...
 })->where(['id' => '^\d+$']);
+```
 
-$router->get('/user/:id', function () {
-    // ...
-})->where(['id' => '^\d+$']);
+Regular expression constraints for optional parameter:
+
+```php
+$router->get('/user/:name?', function () {
+    //
+})->where(['name' => '^[a-zA-Z ]*$']);
+```
+
+Regular expression constraints for multiple optional parameters:
+
+```php
+$router->get('/profile/:id/user/:name?', function () {
+    //
+})->where(['id' => '^\d+$', 'name' => '^[a-zA-Z ]*$']);
 ```
 
 Sometimes you may need to register a route that responds to multiple HTTP verbs. You may do so using the match method. Or, you may even register a route that responds to all HTTP verbs using the any method:
@@ -371,6 +382,18 @@ $router->any('/', function () {
     // ...
 });
 ```
+
+### Route wildcard:
+
+You can use dynamic routes using asterisks.
+
+```php
+$router->get('admin/*', function () {
+    // ...
+});
+```
+
+In the example above, you can dynamically use any path after `admin/`. The asterisk is used as a wildcard and matches any combination of characters.
 
 ### Redirect Routes:
 

@@ -264,8 +264,9 @@ class Router {
             // Loop all route.
             foreach ($this->routes[$this->request->method()] as $routes) {
                 $implodeRoutePath = implode('/', $routes['path']);
-                $params           = [];
-                $url              = '';
+                $this->request->emptyParam();
+                $params = [];
+                $url    = '';
 
                 // Check if requested path size and route path size equal
                 // or check if "*" finds it in the route path
@@ -289,8 +290,17 @@ class Router {
                                     throw new Exception('The optional parameter must be used as the last parameter in the URL', 404);
                                 } elseif (str_ends_with($implodeRoutePath, $route) && isset($path[$key])) {
                                     $url .= '/' . $path[$key];
+                                    $optionalParam = ltrim(rtrim($route, '?'), ':');
 
-                                    $this->request->setParam(ltrim(rtrim($route, '?'), ':'), $path[$key]);
+                                    $this->request->setParam($optionalParam, $path[$key]);
+
+                                    // Check if the dynamic param matches the regular expression.
+                                    // Throw exception if no match.
+                                    if ($routes['where'] && isset($routes['where'][$optionalParam])) {
+                                        if (!preg_match('/' . $routes['where'][$optionalParam] . '/', $path[$key])) {
+                                            throw new Exception('Route param expression does not match', 404);
+                                        }
+                                    }
 
                                     goto url;
                                 } elseif (str_ends_with($implodeRoutePath, $route) && !isset($path[$key])) {
@@ -299,7 +309,7 @@ class Router {
                             }
                             // Check if the dynamic param matches the regular expression.
                             // Throw exception if no match.
-                            if ($routes['where']) {
+                            if ($routes['where'] && isset($routes['where'][ltrim($route, ':')])) {
                                 if (!preg_match('/' . $routes['where'][ltrim($route, ':')] . '/', $path[$key])) {
                                     throw new Exception('Route param expression does not match', 404);
                                 }
@@ -314,8 +324,6 @@ class Router {
                             if ($key > sizeof($path) - 1) {
                                 return $this->fallbackHandling();
                             }
-
-                            $this->request->emptyParam();
 
                             foreach (range($key, sizeof($path) - 1) as $pathKey) {
                                 $url .= '/' . $path[$pathKey];
@@ -396,47 +404,57 @@ class Router {
 
             // Check if requested name and route name equal.
             if ($routes['name'] === $name) {
+                $implodeRoutePath = implode('/', $routes['path']);
+                $url              = '';
 
-                // Check the route dynamic params.
-                if (!$routes['where']) {
-                    $url = '';
+                foreach ($routes['path'] as $key => $route) {
+                    if (str_starts_with($route, ':')) {
+                        if (str_ends_with($route, '?')) {
+                            $optionalParam = ltrim(rtrim($route, '?'), ':');
 
-                    foreach ($routes['path'] as $key => $value) {
-                        if (str_starts_with($value, ':') && $params) {
-                            $url .= '/' . $params[ltrim($value, ':')];
-                        } elseif (str_starts_with($value, ':') && !$params) {
-                            throw new Exception('This route\'s param missing', 404);
-                        } else {
-                            if (sizeof($routes['path']) - 1 === $key && $params) {
-                                $url .= '/' . $value . '?' . http_build_query($params);
-                            } else {
-                                $url .= '/' . $value;
+                            if (!str_ends_with($implodeRoutePath, $route)) {
+                                throw new Exception('The optional parameter must be used as the last parameter in the URL', 404);
+                            } elseif (str_ends_with($route, '?') && isset($params[$optionalParam])) {
+                                if (isset($routes['where'][$optionalParam]) && !preg_match('/' . $routes['where'][$optionalParam] . '/', $params[$optionalParam])) {
+                                    throw new Exception('Route param expression does not match', 404);
+                                }
+
+                                $url .= '/' . $params[$optionalParam];
+                                unset($params[$optionalParam]);
+
+                                if (sizeof($routes['path']) - 1 === $key && $params) {
+                                    $url .= '?' . http_build_query($params);
+                                }
+                            } elseif (str_ends_with($route, '?') && !isset($params[$optionalParam])) {
+                                if (sizeof($routes['path']) - 1 === $key && $params) {
+                                    $url .= '?' . http_build_query($params);
+                                }
                             }
-                        }
-                    }
+                        } elseif (isset($params[ltrim($route, ':')])) {
+                            if (isset($routes['where'][ltrim($route, ':')]) && !preg_match('/' . $routes['where'][ltrim($route, ':')] . '/', $params[ltrim($route, ':')])) {
+                                throw new Exception('Route param expression does not match', 404);
+                            }
 
-                    redirect($url);
-                } elseif (isset($routes['where']) && isset($params) && (sizeof($params) === sizeof($routes['where']))) {
+                            $url .= '/' . $params[ltrim($route, ':')];
+                            unset($params[ltrim($route, ':')]);
 
-                    foreach ($routes['where'] as $key => $expression) {
-                        if (!preg_match('/' . $expression . '/', $params[$key])) {
-                            throw new Exception('Route param expression does not match', 404);
-                        }
-                    }
-
-                    $url = '';
-
-                    foreach ($routes['path'] as $key => $value) {
-                        if (str_starts_with($value, ':')) {
-                            $url .= '/' . $params[ltrim($value, ':')];
+                            if (sizeof($routes['path']) - 1 === $key && $params) {
+                                $url .= '?' . http_build_query($params);
+                            }
                         } else {
-                            $url .= '/' . $value;
+                            throw new Exception('The route parameters are missing.', 404);
+                        }
+                    } elseif ($route === '*') {
+                        throw new Exception('The name root cannot be used when you use the asterisk (*) symbol in the root.', 404);
+                    } else {
+                        $url .= '/' . $route;
+
+                        if (sizeof($routes['path']) - 1 === $key && $params) {
+                            $url .= '?' . http_build_query($params);
                         }
                     }
-                    redirect($url);
-                } else {
-                    throw new Exception('Route param expression does not match', 404);
                 }
+                redirect($url);
             }
         }
         throw new Exception('Route name did not defined', 404);
