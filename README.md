@@ -275,7 +275,7 @@ $router->get('/user/:id/profile', function () {
 
 return toRoute('profile', ['id' => 1, 'photos' => 'yes']);
 ```
-**If you use an asterisk in the route, you cannot call it via `toRoute()`.**
+**If you use an asterisk (*) in the route, you cannot call it via `toRoute()`.**
 
 
 ### Route Parameters:
