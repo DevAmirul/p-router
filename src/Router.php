@@ -401,7 +401,6 @@ class Router {
     public function toRoute(string $name, array $params = null) {
         // Iterate over all routes which defined with the Requested method.
         foreach ($this->routes[$this->request->method()] as $routes) {
-
             // Check if requested name and route name equal.
             if ($routes['name'] === $name) {
                 $implodeRoutePath = implode('/', $routes['path']);
