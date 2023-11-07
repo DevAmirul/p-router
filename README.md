@@ -275,6 +275,8 @@ $router->get('/user/:id/profile', function () {
 
 return toRoute('profile', ['id' => 1, 'photos' => 'yes']);
 ```
+**If you use an asterisk in the route, you cannot call it via `toRoute()`.**
+
 
 ### Route Parameters:
 
@@ -385,7 +387,7 @@ $router->any('/', function () {
 
 ### Route wildcard:
 
-You can use dynamic routes using asterisks.
+You can use dynamic routes using asterisks:
 
 ```php
 $router->get('admin/*', function () {
