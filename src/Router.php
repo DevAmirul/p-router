@@ -444,7 +444,7 @@ class Router {
                             throw new Exception('The route parameters are missing.', 404);
                         }
                     } elseif ($route === '*') {
-                        throw new Exception('The name root cannot be used when you use the asterisk (*) symbol in the root.', 404);
+                        throw new Exception('The name route cannot be used when you use the asterisk (*) symbol in the route.', 404);
                     } else {
                         $url .= '/' . $route;
 
@@ -487,13 +487,13 @@ class Router {
      * Helper function of name.
      */
     public function helperFunctionOfName(string $name, string $method): void {
-        // Check if root name is used once, Throw exception if name is used.
+        // Check if route name is used once, Throw exception if name is used.
         if (!empty($this->routeNames[$method])) {
             if (in_array($name, $this->routeNames[$method])) {
                 throw new Exception('Router name (' . $name . ') has been used more than once');
             }
         }
-        // Set name to root
+        // Set name to route
         $this->routes[$method][array_key_last($this->routes[$method])]['name'] = $name;
 
         $this->routeNames[$method][] = $name;
@@ -503,7 +503,7 @@ class Router {
      * Helper function of middleware.
      */
     public function helperFunctionOfMiddleware(string | array $middleware, string $method): void {
-        // Set middleware to root
+        // Set middleware to route
         if (is_array($middleware)) {
             if (is_array($this->routes[$method][array_key_last($this->routes[$method])]['middleware'])) {
                 $array_merge                                                                 = array_merge($this->routes[$method][array_key_last($this->routes[$method])]['middleware'], $middleware);
