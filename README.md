@@ -69,6 +69,9 @@ Run the following command:
 ```bash
 composer dump-autoload
 ```
+
+Create `app` folder.
+
 ```bash
 composer app
 ```
