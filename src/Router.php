@@ -46,6 +46,9 @@ class Router {
     public Request $request;
 
     private function __construct() {
+        // Start session.
+        session_start();
+
         // Define all http verbs.
         $this->allMethods = ['get', 'post', 'delete', 'put', 'patch'];
 

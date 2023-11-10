@@ -73,6 +73,12 @@ composer dump-autoload
 composer app
 ```
 
+Start PHP server.
+
+```bash
+composer start
+```
+
 ## Examples:
 
 #### Basic route:
