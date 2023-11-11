@@ -641,6 +641,40 @@ In Content file:
 </body>
 ```
 
+## Handle Form:
+
+```php
+<form action="/login" method="POST" class="mt-5">
+
+    <?=setCsrf()?>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail" class="form-label">Email address</label>
+        <input type="email" name="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp">
+        <div id="emailHelp" class="form-text"> <?= errors('email')?> </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputPassword" class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" id="exampleInputPassword">
+        <div id="emailHelp" class="form-text"> <?= errors('password')?> </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+```
+
+### Method Field:
+
+Since HTML forms can't make PUT, PATCH, or DELETE requests, you will need to add a hidden `_method` field to spoof these HTTP verbs. The `setMethod()` Blade directive can create this field for you:
+
+```php
+<form>
+    <?=setMethod('delete')?>
+    ...
+</form>
+```
+
 ## Helpers:
 
 ### Table of Contents
