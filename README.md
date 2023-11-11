@@ -15,9 +15,9 @@ A simple, lightweight, and powerful PHP Router with rich features like Middlewar
 ## Features:
 
 - Supports `GET` `POST` `PUT` `PATCH` and `DELETE` HTTPS verbs
-- The methods that the router supports are - `get()` `post()` `put()` `patch()` `delete()` `match()` `any()`
+- The methods that the router supports are :- `get()` `post()` `put()` `patch()` `delete()` `match()` `any()`
 - Named Routes
-- Regular Expression Constraints for parameters
+- Regular expression constraints for parameters
 - Fallback method
 - Middleware
 - CSRF protection
