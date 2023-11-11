@@ -147,8 +147,8 @@ $router->any($uri, $callback);
 
 Routes accept a URI and a closure or a array, providing a very simple and expressive method of defining routes and behavior without complicated routing configuration files.
 
-1. First Create index.php file.
-2. Define App root path.
+1. First create index.php file.
+2. Define Application root path.
 3. Require vendor autoload file.
 4. Create `router` singleton instance.
 5. Define routes.
