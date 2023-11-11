@@ -38,6 +38,7 @@ A simple, lightweight, and powerful PHP Router with rich features like Middlewar
 - **[Controllers](#Controllers)**
 - **[Request](#Request)**
 - **[Handle Html View Content File](#Handle-Html-View-Content-File)**
+- **[Handle Form](#Handle-Form)**
 - **[Helpers](#Helpers)**
 
 
