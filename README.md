@@ -384,6 +384,8 @@ $router->get('/profile/:id/user/:name?', function () {
 })->where(['id' => '^\d+$', 'name' => '^[a-zA-Z ]*$']);
 ```
 
+### match and any method
+
 Sometimes you may need to register a route that responds to multiple HTTP verbs. You may do so using the match method. Or, you may even register a route that responds to all HTTP verbs using the any method:
 
 ```php
@@ -408,13 +410,13 @@ $router->get('admin/*', function () {
 
 In the example above, you can dynamically use any path after `admin/`. The asterisk is used as a wildcard and matches any combination of characters.
 
-### Redirect Routes:
+<!-- ### Redirect Routes:
 
 If you are defining a route that redirects to another URI, you may use the `redirect()` method. This method provides a convenient shortcut so that you do not have to define a full route
 
 ```php
 $router->redirect('/here', '/there');
-```
+``` -->
 
 ## Middlewares:
 
