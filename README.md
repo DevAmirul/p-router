@@ -16,8 +16,9 @@ A simple, lightweight, and powerful PHP Router with rich features like Middlewar
 
 - Supports `GET` `POST` `PUT` `PATCH` and `DELETE` HTTPS verbs
 - The methods that the router supports are - `get()` `post()` `put()` `patch()` `delete()` `match()` `any()`
-- Named Routes
 - Middleware
+- Controller
+- Named Routes
 - Regular Expression Constraints for parameters
 - Fallback method
 - Easy way to manage request
@@ -33,6 +34,7 @@ A simple, lightweight, and powerful PHP Router with rich features like Middlewar
 - **[Directories](#Directories)**
 - **[Routes](#Routes)**
 - **[Middlewares](#middlewares)**
+- **[CSRF Protection](#CSRF-Protection)**
 - **[Controllers](#Controllers)**
 - **[Request](#Request)**
 - **[Handle Html View Content File](#Handle-Html-View-Content-File)**
@@ -414,17 +416,6 @@ If you are defining a route that redirects to another URI, you may use the `redi
 $router->redirect('/here', '/there');
 ```
 
-## CSRF Protection:
-
-Remember, any HTML forms pointing to POST, PUT, PATCH, or DELETE routes that are defined in the web routes file should include a CSRF token field. Otherwise, the request will be rejected:
-
-```php
-<form method="POST" action="/profile">
-    <?=setCsrf()?>
-    ...
-</form>
-```
-
 ## Middlewares:
 
 `app/Middlewares`: Middleware provides a convenient mechanism for inspecting and filtering HTTP requests entering your application.
@@ -499,38 +490,6 @@ Router::put('/users/:id', function(){
 })->middleware(['auth','csrf']);
 ```
 
-<!-- #### Middleware Parameters:
-
-**We can optionally pass parameters to the middleware.**
-
-```php
-Router::get('/profile', [AuthenticatedController::class, 'show'])->name('profile')->middleware('auth:parameter');
-```
-
-Multiple parameters:
-
-```php
-Router::get('/profile', [AuthenticatedController::class, 'show'])->name('profile')->middleware('auth:parameter');
-``` -->
-<!--
-Handle middleware arguments:
-
-```php
-public function handle(Request $request, array $guards) {
-    if (!empty($guards)) {
-        // Handle middleware arguments.
-        foreach ($guards as $guard) {
-            if (!Auth::guard($guard)->check() && $guard === 'admin') {
-                return redirect('/admin/login');
-            }
-        }
-    } elseif (!Auth::check()) {
-        return redirect('/login');
-    }
-    return;
-}
-``` -->
-
 #### Set default middlewares:
 
 If you want to set some middleware to Https verbs by default, you can do that very easily, The defined middleware will run when that https method request is handled:
@@ -543,6 +502,18 @@ Open `app/config/middleware.php`
 'put'        => [ 'csrf' ],
 'patch'      => [ 'csrf' ],
 'delete'     => [ 'csrf', 'auth' ],
+```
+
+## CSRF Protection:
+
+Anytime you define a "POST", "PUT", "PATCH", or "DELETE" HTML form in your application, you should include a hidden CSRF _token field in the form so that the CSRF protection middleware can validate the request, Otherwise, the request will be rejected. For convenience, you may use the `setCsrf()` function to generate the hidden token input field:
+
+
+```php
+<form method="POST" action="/profile">
+    <?=setCsrf()?>
+    ...
+</form>
 ```
 
 ## Controllers:
